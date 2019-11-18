@@ -24,7 +24,8 @@ public class SokobanSolver {
             curr.printMap();
             System.out.println(curr.toString());
             if (curr.reachedGoal()) {
-                System.out.println("****************Solution Found ******************");
+                System.out.println();
+                System.out.println("**************** Solution Found ! ******************");
                 System.out.println(curr.getMove());
                 break;
             } else {
