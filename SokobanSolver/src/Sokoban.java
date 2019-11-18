@@ -69,6 +69,8 @@ public  class Sokoban {
     }
 
     public void printMap() {
+        System.out.println("----------------------------------");
+        System.out.println("The map is as follows:");
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < width; j++) {
                 System.out.print(map[i][j] + " ");

@@ -16,13 +16,13 @@ public class MapParser {
             lines.add(s.nextLine());
         }
         row = lines.size();
-        col = lines.get(0).split(" ").length;
+        col = lines.get(0).length();
         map = new char[row][col];
 
         for (int i = 0; i < row; i++) {
-            String[] ss = lines.get(i).split(" ");
+            char[] cs = lines.get(i).toCharArray();
             for (int j = 0; j < col; j++) {
-                map[i][j] = ss[j].charAt(0);
+                map[i][j] = cs[j];
             }
         }
     }
