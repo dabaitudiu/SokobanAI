@@ -10,12 +10,14 @@ public  class Sokoban {
     private HashSet<Point> boxes;
     private HashSet<Point> storages;
     private Point player;
+    private char[][] map;
 
     public Sokoban(String filename) throws FileNotFoundException{
         walls = new HashSet<>();
         storages = new HashSet<>();
         boxes = new HashSet<>();
         readInput(filename);
+        loadMap();
     }
 
     private void readInput(String filename) throws FileNotFoundException{
@@ -52,6 +54,29 @@ public  class Sokoban {
         System.out.println();
     }
 
+    private void loadMap() {
+        map = new char[height][width];
+        for (Point e : walls) {
+            map[e.getX()-1][e.getY()-1] = '#';
+        }
+        for (Point e : boxes) {
+            map[e.getX()-1][e.getY()-1] = '@';
+        }
+        for (Point e : storages) {
+            map[e.getX()-1][e.getY()-1] = '!';
+        }
+        map[player.getX()-1][player.getY()-1] = '*';
+    }
+
+    public void printMap() {
+        for (int i = 0; i < height; i++) {
+            for (int j = 0; j < width; j++) {
+                System.out.print(map[i][j] + " ");
+            }
+            System.out.println();
+        }
+    }
+
     public int getWidth() {
         return width;
     }
@@ -76,11 +101,11 @@ public  class Sokoban {
         this.walls = walls;
     }
 
-    public HashSet<Point> getstorages() {
+    public HashSet<Point> getStorages() {
         return storages;
     }
 
-    public void setstorages(HashSet<Point> storages) {
+    public void setStorages(HashSet<Point> storages) {
         this.storages = storages;
     }
 
