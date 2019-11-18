@@ -9,7 +9,7 @@ public class SokobanSolver {
 //        MapParser mps = new MapParser("inputs/map1.txt");
 //        mps.parse();
 
-        Sokoban sokoban = new Sokoban("inputs/2.txt");
+        Sokoban sokoban = new Sokoban("inputs/1.txt");
         sokoban.printMap();
         State root = new State(sokoban.getWalls(),sokoban.getBoxes(),sokoban.getStorages(),
                 sokoban.getPlayer(),"", sokoban.getHeight(), sokoban.getWidth());
@@ -19,7 +19,7 @@ public class SokobanSolver {
         while (!queue.isEmpty()) {
             State curr = queue.poll();
             visited.add(curr);
-            System.out.println("Current map: ---------------------");
+            System.out.println("--------------------Next Popped map: ---------------------");
             curr.loadMap();
             curr.printMap();
             System.out.println(curr.toString());
@@ -30,6 +30,7 @@ public class SokobanSolver {
             } else {
                 for (State e : curr.getNeighbors()) {
                     if (!visited.contains(e)) queue.add(e);
+                    else System.out.println(e.toString() + " has been visited. Thus pass. ");
                 }
             }
         }

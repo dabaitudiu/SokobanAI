@@ -56,6 +56,11 @@ public  class Sokoban {
 
     private void loadMap() {
         map = new char[height][width];
+        for (int i = 0; i < height; i++) {
+            for (int j = 0; j < width; j++) {
+                map[i][j] = ' ';
+            }
+        }
         for (Point e : walls) {
             map[e.getX()-1][e.getY()-1] = '#';
         }
@@ -69,7 +74,7 @@ public  class Sokoban {
     }
 
     public void printMap() {
-        System.out.println("----------------------------------");
+        System.out.println("-------------Initial Map---------------------");
         System.out.println("The map is as follows:");
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < width; j++) {

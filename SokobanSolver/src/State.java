@@ -29,38 +29,58 @@ public class State {
         int x = player.getX();
         int y = player.getY();
 
-        // move up
         move(x-1,y,x-2,y,"u");
         move(x+1,y,x+2,y,"d");
         move(x,y-1,x,y-2,"l");
         move(x,y+1,x,y+2,"r");
 
-        System.out.println("Its neighbors:");
-        for (State e : neighbors) {
-            System.out.println("("+x+","+y+") -> "+e.move.charAt(e.move.length()-1));
-            e.loadMap();
-            e.printMap();
-        }
+//        System.out.println("Its neighbors:");
+//        for (State e : neighbors) {
+//            System.out.println("("+x+","+y+") -> "+e.move.charAt(e.move.length()-1));
+//            e.loadMap();
+//            e.printMap();
+//        }
         return neighbors;
     }
 
     private boolean inbound(int x, int y) {
-        if (x >= 0 && y >= 0 && x < rows && y < cols) return true;
+        if (x >= 1 && y >= 1 && x <= rows && y <= cols) return true;
         else return false;
     }
 
     public void move(int ax, int ay, int bx, int by, String s) {
-        if (!inbound(ax,ay) || !inbound(bx,by)) return;
+        System.out.println(player.toString() + " move " + s + " :");
+        if (!inbound(ax,ay) || !inbound(bx,by)) {
+            System.out.println(" not ok.");
+            return;
+        }
         Point attempt = new Point(ax,ay);
         Point newbox = new Point(bx,by);
+        boolean changed = false;
         if (!walls.contains(attempt)) {
             if (!boxes.contains(attempt) || !boxes.contains(newbox) && !walls.contains(newbox)) {
                 if (boxes.contains(attempt)) {
                     boxes.remove(attempt);
                     boxes.add(newbox);
+                    changed = true;
+                    System.out.println("success: box moves to " + newbox.toString());
                 }
-                neighbors.add(new State(walls,boxes,storages,attempt,move + s, rows, cols));
+                System.out.println("player moves to " + attempt.toString());
+                State cur = new State(walls,new HashSet<>(boxes),storages,attempt,move + s, rows, cols);
+                neighbors.add(cur);
+                System.out.println("("+player.getX()+","+player.getY()+") -> "+s + " | total: " + cur.getMove());
+                cur.loadMap();
+                cur.printMap();
+                if (changed) {
+                    boxes.remove(newbox);
+                    boxes.add(attempt);
+                    changed = false;
+                }
+            } else {
+                System.out.println(" not ok.");
             }
+        } else {
+            System.out.println(" not ok.");
         }
     }
 
@@ -81,6 +101,11 @@ public class State {
 
     public void loadMap() {
         map = new char[rows][cols];
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                map[i][j] = ' ';
+            }
+        }
         for (Point e : walls) {
             map[e.getX()-1][e.getY()-1] = '#';
         }
@@ -94,10 +119,9 @@ public class State {
     }
 
     public void printMap() {
-        System.out.println("The map is as follows:");
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
-                System.out.print(map[i][j]);
+                System.out.print(map[i][j] + " ");
             }
             System.out.println();
         }
@@ -105,20 +129,22 @@ public class State {
 
     @Override
     public String toString() {
-        String s = "Current status: player at (" + player.getX() + "," + player.getY() + ")";
+        String s = "Current status: player at (" + player.getX() + "," + player.getY() + ") with path "+ move;
         return s;
     }
 
     @Override
     public int hashCode() {
-        return player.getX() * 137 + player.getY();
+        int boxHashCode = 0;
+        for (Point e : boxes) boxHashCode += e.hashCode();
+        return player.getX() * 137 + player.getY() + boxHashCode;
     }
 
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof State) {
             State s = (State) obj;
-            return s.getPlayer().getX() == player.getX() && s.getPlayer().getY() == player.getY();
+            return s.hashCode() == hashCode();
         } else return false;
     }
 
