@@ -12,9 +12,10 @@ public class State {
     private int rows;
     private int cols;
     private char[][] map;
+    private boolean verbose;
 
     public State(HashSet<Point> walls, HashSet<Point> boxes, HashSet<Point> storages,
-                 Point player, String move, int rows, int cols) {
+                 Point player, String move, int rows, int cols, boolean verbose) {
         this.walls = walls;
         this.boxes = boxes;
         this.storages = storages;
@@ -23,16 +24,38 @@ public class State {
         this.move = move;
         this.rows = rows;
         this.cols = cols;
+        this.verbose = verbose;
+    }
+
+    public State(State s) {
+        this.walls = s.walls;
+        this.walls = s.walls;
+        this.boxes = s.boxes;
+        this.storages = s.storages;
+        this.player = s.player;
+        neighbors = new ArrayList<>();
+        this.move = s.move;
+        this.rows = s.rows;
+        this.cols = s.cols;
+        this.verbose = s.verbose;
     }
 
     public List<State> getNeighbors() {
         int x = player.getX();
         int y = player.getY();
 
-        move(x-1,y,x-2,y,"u");
-        move(x+1,y,x+2,y,"d");
-        move(x,y-1,x,y-2,"l");
-        move(x,y+1,x,y+2,"r");
+
+        if (verbose){
+            moveVerbose(x-1,y,x-2,y,"u");
+            moveVerbose(x+1,y,x+2,y,"d");
+            moveVerbose(x,y-1,x,y-2,"l");
+            moveVerbose(x,y+1,x,y+2,"r");
+        } else {
+            move(x-1,y,x-2,y,"u");
+            move(x+1,y,x+2,y,"d");
+            move(x,y-1,x,y-2,"l");
+            move(x,y+1,x,y+2,"r");
+        }
 
 //        System.out.println("Its neighbors:");
 //        for (State e : neighbors) {
@@ -49,6 +72,31 @@ public class State {
     }
 
     public void move(int ax, int ay, int bx, int by, String s) {
+        if (!inbound(ax,ay) || !inbound(bx,by)) {
+            return;
+        }
+        Point attempt = new Point(ax,ay);
+        Point newbox = new Point(bx,by);
+        boolean changed = false;
+        if (!walls.contains(attempt)) {
+            if (!boxes.contains(attempt) || !boxes.contains(newbox) && !walls.contains(newbox)) {
+                if (boxes.contains(attempt)) {
+                    boxes.remove(attempt);
+                    boxes.add(newbox);
+                    changed = true;
+                }
+                State cur = new State(walls,new HashSet<>(boxes),storages,attempt,move + s, rows, cols,verbose);
+                neighbors.add(cur);
+                if (changed) {
+                    boxes.remove(newbox);
+                    boxes.add(attempt);
+                    changed = false;
+                }
+            }
+        }
+    }
+
+    public void moveVerbose(int ax, int ay, int bx, int by, String s) {
         System.out.println(player.toString() + " move " + s + " :");
         if (!inbound(ax,ay) || !inbound(bx,by)) {
             System.out.println(" not ok.");
@@ -66,7 +114,7 @@ public class State {
                     System.out.println("success: box moves to " + newbox.toString());
                 }
                 System.out.println("player moves to " + attempt.toString());
-                State cur = new State(walls,new HashSet<>(boxes),storages,attempt,move + s, rows, cols);
+                State cur = new State(walls,new HashSet<>(boxes),storages,attempt,move + s, rows, cols,verbose);
                 neighbors.add(cur);
                 System.out.println("("+player.getX()+","+player.getY()+") -> "+s + " | total: " + cur.getMove());
                 cur.loadMap();
