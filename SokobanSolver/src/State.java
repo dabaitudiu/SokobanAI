@@ -1,12 +1,13 @@
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
 public class State {
-    private HashSet<Point> walls;
-    private HashSet<Point> boxes;
-    private HashSet<Point> storages;
-    private Point player;
+    private HashSet<Coordinate> walls;
+    private HashSet<Coordinate> boxes;
+    private HashSet<Coordinate> storages;
+    private Coordinate player;
     private List<State> neighbors;
     private String move;
     private int rows;
@@ -14,8 +15,8 @@ public class State {
     private char[][] map;
     private boolean verbose;
 
-    public State(HashSet<Point> walls, HashSet<Point> boxes, HashSet<Point> storages,
-                 Point player, String move, int rows, int cols, boolean verbose) {
+    public State(HashSet<Coordinate> walls, HashSet<Coordinate> boxes, HashSet<Coordinate> storages,
+                 Coordinate player, String move, int rows, int cols, boolean verbose) {
         this.walls = walls;
         this.boxes = boxes;
         this.storages = storages;
@@ -69,8 +70,8 @@ public class State {
         if (!inbound(ax,ay) || !inbound(bx,by)) {
             return;
         }
-        Point attempt = new Point(ax,ay);
-        Point newbox = new Point(bx,by);
+        Coordinate attempt = new Coordinate(ax,ay);
+        Coordinate newbox = new Coordinate(bx,by);
         boolean changed = false;
         if (!walls.contains(attempt)) {
             if (!boxes.contains(attempt) || !boxes.contains(newbox) && !walls.contains(newbox)) {
@@ -96,8 +97,8 @@ public class State {
             System.out.println(" not ok.");
             return;
         }
-        Point attempt = new Point(ax,ay);
-        Point newbox = new Point(bx,by);
+        Coordinate attempt = new Coordinate(ax,ay);
+        Coordinate newbox = new Coordinate(bx,by);
         boolean changed = false;
         if (!walls.contains(attempt)) {
             if (!boxes.contains(attempt) || !boxes.contains(newbox) && !walls.contains(newbox)) {
@@ -145,17 +146,17 @@ public class State {
      * @return
      */
     public boolean isDeadLock() {
-        for (Point e : boxes) {
+        for (Coordinate e : boxes) {
             int x = e.getX();
             int y = e.getY();
 
             // case 1
             //   #  or  # @  or  #   or  @ #
             // # @        #      @ #     #
-            if (walls.contains(new Point(x-1,y)) && walls.contains(new Point(x,y-1))) return true;
-            if (walls.contains(new Point(x+1,y)) && walls.contains(new Point(x,y-1))) return true;
-            if (walls.contains(new Point(x-1,y)) && walls.contains(new Point(x,y+1))) return true;
-            if (walls.contains(new Point(x+1,y)) && walls.contains(new Point(x,y+1))) return true;
+            if (walls.contains(new Coordinate(x-1,y)) && walls.contains(new Coordinate(x,y-1))) return true;
+            if (walls.contains(new Coordinate(x+1,y)) && walls.contains(new Coordinate(x,y-1))) return true;
+            if (walls.contains(new Coordinate(x-1,y)) && walls.contains(new Coordinate(x,y+1))) return true;
+            if (walls.contains(new Coordinate(x+1,y)) && walls.contains(new Coordinate(x,y+1))) return true;
 
             // case 2
             // ## or #@  or  @#  or  @@
@@ -174,7 +175,7 @@ public class State {
     }
 
     public boolean reachedGoal() {
-        for (Point e : boxes) {
+        for (Coordinate e : boxes) {
             if (!storages.contains(e)) return false;
         }
         return true;
@@ -185,17 +186,17 @@ public class State {
         int y = player.getY();
 
         int playerToBoxes = 0;
-        for (Point e : boxes) {
+        for (Coordinate e : boxes) {
             int bx = e.getX();
             int by = e.getY();
             playerToBoxes += Math.sqrt((x-bx)*(x-bx) + (y-by)*(y-by));
         }
 
         int boxesToStorages = 0;
-        for (Point e : storages) {
+        for (Coordinate e : storages) {
             int ex = e.getX();
             int ey = e.getY();
-            for (Point m : boxes) {
+            for (Coordinate m : boxes) {
                 int mx = m.getX();
                 int my = m.getY();
                 boxesToStorages += Math.sqrt((ex-mx)*(ex-mx) + (ey-my)*(ey-my));
@@ -209,17 +210,17 @@ public class State {
         int y = player.getY();
 
         int playerToBoxes = 0;
-        for (Point e : boxes) {
+        for (Coordinate e : boxes) {
             int bx = e.getX();
             int by = e.getY();
             playerToBoxes += Math.abs(x-bx) + Math.abs(y-by);
         }
 
         int boxesToStorages = 0;
-        for (Point e : storages) {
+        for (Coordinate e : storages) {
             int ex = e.getX();
             int ey = e.getY();
-            for (Point m : boxes) {
+            for (Coordinate m : boxes) {
                 int mx = m.getX();
                 int my = m.getY();
                 boxesToStorages += Math.abs(ex-mx) + Math.abs(ey-my);
@@ -232,7 +233,7 @@ public class State {
         return move;
     }
 
-    public Point getPlayer() {
+    public Coordinate getPlayer() {
         return player;
     }
 
@@ -243,13 +244,13 @@ public class State {
                 map[i][j] = ' ';
             }
         }
-        for (Point e : walls) {
+        for (Coordinate e : walls) {
             map[e.getX()-1][e.getY()-1] = '#';
         }
-        for (Point e : storages) {
+        for (Coordinate e : storages) {
             map[e.getX()-1][e.getY()-1] = '!';
         }
-        for (Point e : boxes) {
+        for (Coordinate e : boxes) {
             map[e.getX()-1][e.getY()-1] = '@';
         }
         map[player.getX()-1][player.getY()-1] = '*';
@@ -274,7 +275,7 @@ public class State {
     @Override
     public int hashCode() {
         int boxHashCode = 0;
-        for (Point e : boxes) boxHashCode += e.hashCode();
+        for (Coordinate e : boxes) boxHashCode += e.hashCode();
         return player.getX() * 139 + player.getY() + boxHashCode;
     }
 

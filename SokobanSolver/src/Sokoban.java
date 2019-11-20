@@ -6,10 +6,10 @@ import java.util.Scanner;
 public  class Sokoban {
     private int width;
     private int height;
-    private HashSet<Point> walls;
-    private HashSet<Point> boxes;
-    private HashSet<Point> storages;
-    private Point player;
+    private HashSet<Coordinate> walls;
+    private HashSet<Coordinate> boxes;
+    private HashSet<Coordinate> storages;
+    private Coordinate player;
     private char[][] map;
 
     public Sokoban(String filename) throws FileNotFoundException{
@@ -39,16 +39,16 @@ public  class Sokoban {
         load(nStorages,storages, "storages");
 
         // handle player
-        player = new Point(Integer.parseInt(pos[0]), Integer.parseInt(pos[1]));
+        player = new Coordinate(Integer.parseInt(pos[0]), Integer.parseInt(pos[1]));
         System.out.println("Player at: " + player.toString());
 
     }
 
-    private void load(String[] arr, HashSet<Point> hst, String name) {
+    private void load(String[] arr, HashSet<Coordinate> hst, String name) {
         int num = Integer.parseInt(arr[0]);
         System.out.print("totoal " + name + " : " + num + " -> ");
         for (int i = 0; i < num; i++) {
-            hst.add(new Point(Integer.parseInt(arr[2 * i + 1]),Integer.parseInt(arr[2 * i + 2])));
+            hst.add(new Coordinate(Integer.parseInt(arr[2 * i + 1]),Integer.parseInt(arr[2 * i + 2])));
         }
         hst.forEach(e -> {System.out.print(e.toString() + " ");});
         System.out.println();
@@ -61,13 +61,13 @@ public  class Sokoban {
                 map[i][j] = ' ';
             }
         }
-        for (Point e : walls) {
+        for (Coordinate e : walls) {
             map[e.getX()-1][e.getY()-1] = '#';
         }
-        for (Point e : boxes) {
+        for (Coordinate e : boxes) {
             map[e.getX()-1][e.getY()-1] = '@';
         }
-        for (Point e : storages) {
+        for (Coordinate e : storages) {
             map[e.getX()-1][e.getY()-1] = '!';
         }
         map[player.getX()-1][player.getY()-1] = '*';
@@ -100,35 +100,35 @@ public  class Sokoban {
         this.height = height;
     }
 
-    public HashSet<Point> getWalls() {
+    public HashSet<Coordinate> getWalls() {
         return walls;
     }
 
-    public void setWalls(HashSet<Point> walls) {
+    public void setWalls(HashSet<Coordinate> walls) {
         this.walls = walls;
     }
 
-    public HashSet<Point> getStorages() {
+    public HashSet<Coordinate> getStorages() {
         return storages;
     }
 
-    public void setStorages(HashSet<Point> storages) {
+    public void setStorages(HashSet<Coordinate> storages) {
         this.storages = storages;
     }
 
-    public HashSet<Point> getBoxes() {
+    public HashSet<Coordinate> getBoxes() {
         return boxes;
     }
 
-    public void setBoxes(HashSet<Point> boxes) {
+    public void setBoxes(HashSet<Coordinate> boxes) {
         this.boxes = boxes;
     }
 
-    public Point getPlayer() {
+    public Coordinate getPlayer() {
         return player;
     }
 
-    public void setPlayer(Point player) {
+    public void setPlayer(Coordinate player) {
         this.player = player;
     }
 }

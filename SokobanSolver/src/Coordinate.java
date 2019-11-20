@@ -1,8 +1,8 @@
-public class Point {
+public class Coordinate {
     private int x;
     private int y;
 
-    public Point(int x, int y){
+    public Coordinate(int x, int y){
         this.x = x;
         this.y = y;
     }
@@ -22,14 +22,14 @@ public class Point {
 
     @Override
     public boolean equals(Object obj) {
-        if (obj instanceof Point) {
-            Point p = (Point) obj;
+        if (obj instanceof Coordinate) {
+            Coordinate p = (Coordinate) obj;
             return (p.getX() == x && p.getY() == y);
         } else return false;
     }
 
     @Override
     public String toString() {
-        return "Point(" + x + "," + y + ")";
+        return "Coordinate(" + x + "," + y + ")";
     }
 }
