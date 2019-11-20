@@ -57,12 +57,6 @@ public class State {
             move(x,y+1,x,y+2,"r");
         }
 
-//        System.out.println("Its neighbors:");
-//        for (State e : neighbors) {
-//            System.out.println("("+x+","+y+") -> "+e.move.charAt(e.move.length()-1));
-//            e.loadMap();
-//            e.printMap();
-//        }
         return neighbors;
     }
 
@@ -132,11 +126,106 @@ public class State {
         }
     }
 
+    /**
+     * - case 1 :
+     *   #  or  # @  or  #   or  @ #
+     * # @        #      @ #     #
+     *
+     * - case 2:
+     * ## or #@  or  @#  or  @@
+     * @@    #@      @#      ##
+     *
+     *
+     * - case 3:
+     * #####  or  #?@?#  or  # #  or  # #
+     * #?@?#      #####      # ?      ? #
+     *                       # @      @ #
+     *                       # ?      ? #
+     *                       # #      # #
+     * @return
+     */
+    public boolean isDeadLock() {
+        for (Point e : boxes) {
+            int x = e.getX();
+            int y = e.getY();
+
+            // case 1
+            //   #  or  # @  or  #   or  @ #
+            // # @        #      @ #     #
+            if (walls.contains(new Point(x-1,y)) && walls.contains(new Point(x,y-1))) return true;
+            if (walls.contains(new Point(x+1,y)) && walls.contains(new Point(x,y-1))) return true;
+            if (walls.contains(new Point(x-1,y)) && walls.contains(new Point(x,y+1))) return true;
+            if (walls.contains(new Point(x+1,y)) && walls.contains(new Point(x,y+1))) return true;
+
+            // case 2
+            // ## or #@  or  @#  or  @@
+            // @@    #@      @#      ##
+//            if (walls.contains(new Point(x-1,y)) && walls.contains(new Point(x-1,y-1)) &&
+//                boxes.contains(new Point(x,y-1))) return true;
+//            if (walls.contains(new Point(x,y-1)) && walls.contains(new Point(x+1,y-1)) &&
+//                    boxes.contains(new Point(x+1,y))) return true;
+//            if (walls.contains(new Point(x,y+1)) && walls.contains(new Point(x+1,y+1)) &&
+//                    boxes.contains(new Point(x+1,y))) return true;
+//            if (walls.contains(new Point(x+1,y)) && walls.contains(new Point(x+1,y+1)) &&
+//                    boxes.contains(new Point(x,y+1))) return true;
+        }
+        return false;
+
+    }
+
     public boolean reachedGoal() {
         for (Point e : boxes) {
             if (!storages.contains(e)) return false;
         }
         return true;
+    }
+
+    public int euclidean() {
+        int x = player.getX();
+        int y = player.getY();
+
+        int playerToBoxes = 0;
+        for (Point e : boxes) {
+            int bx = e.getX();
+            int by = e.getY();
+            playerToBoxes += Math.sqrt((x-bx)*(x-bx) + (y-by)*(y-by));
+        }
+
+        int boxesToStorages = 0;
+        for (Point e : storages) {
+            int ex = e.getX();
+            int ey = e.getY();
+            for (Point m : boxes) {
+                int mx = m.getX();
+                int my = m.getY();
+                boxesToStorages += Math.sqrt((ex-mx)*(ex-mx) + (ey-my)*(ey-my));
+            }
+        }
+        return playerToBoxes+boxesToStorages;
+    }
+
+    public int manhatten() {
+        int x = player.getX();
+        int y = player.getY();
+
+        int playerToBoxes = 0;
+        for (Point e : boxes) {
+            int bx = e.getX();
+            int by = e.getY();
+            playerToBoxes += Math.abs(x-bx) + Math.abs(y-by);
+        }
+
+        int boxesToStorages = 0;
+        for (Point e : storages) {
+            int ex = e.getX();
+            int ey = e.getY();
+            for (Point m : boxes) {
+                int mx = m.getX();
+                int my = m.getY();
+                boxesToStorages += Math.abs(ex-mx) + Math.abs(ey-my);
+            }
+        }
+        return playerToBoxes+boxesToStorages;
     }
 
     public String getMove() {
@@ -177,7 +266,8 @@ public class State {
 
     @Override
     public String toString() {
-        String s = "Current status: player at (" + player.getX() + "," + player.getY() + ") with path "+ move;
+        String s = "Current status: player at (" + player.getX() + "," + player.getY() + ") with path "+ move
+                + " and hashcode = " + hashCode();
         return s;
     }
 
@@ -185,14 +275,14 @@ public class State {
     public int hashCode() {
         int boxHashCode = 0;
         for (Point e : boxes) boxHashCode += e.hashCode();
-        return player.getX() * 137 + player.getY() + boxHashCode;
+        return player.getX() * 139 + player.getY() + boxHashCode;
     }
 
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof State) {
             State s = (State) obj;
-            return s.hashCode() == hashCode();
+            return s.hashCode() == this.hashCode();
         } else return false;
     }
 
