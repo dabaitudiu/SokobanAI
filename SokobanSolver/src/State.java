@@ -44,18 +44,10 @@ public class State {
         int x = player.getX();
         int y = player.getY();
 
-
-        if (verbose){
-            moveVerbose(x-1,y,x-2,y,"u");
-            moveVerbose(x+1,y,x+2,y,"d");
-            moveVerbose(x,y-1,x,y-2,"l");
-            moveVerbose(x,y+1,x,y+2,"r");
-        } else {
-            move(x-1,y,x-2,y,"u");
-            move(x+1,y,x+2,y,"d");
-            move(x,y-1,x,y-2,"l");
-            move(x,y+1,x,y+2,"r");
-        }
+        move(x-1,y,x-2,y,"u",verbose);
+        move(x+1,y,x+2,y,"d",verbose);
+        move(x,y-1,x,y-2,"l",verbose);
+        move(x,y+1,x,y+2,"r",verbose);
 
         return neighbors;
     }
@@ -65,64 +57,56 @@ public class State {
         else return false;
     }
 
-    public void move(int ax, int ay, int bx, int by, String s) {
+    public void move(int ax, int ay, int bx, int by, String s, boolean verbose) {
+        if (verbose) System.out.println(player.toString() + " move " + s + " :");
         if (!inbound(ax,ay) || !inbound(bx,by)) {
+            if (verbose) System.out.println(" not ok.");
             return;
         }
         Point attempt = new Point(ax,ay);
         Point newbox = new Point(bx,by);
         boolean changed = false;
+        boolean storageChanged = false;
         if (!walls.contains(attempt)) {
             if (!boxes.contains(attempt) || !boxes.contains(newbox) && !walls.contains(newbox)) {
                 if (boxes.contains(attempt)) {
                     boxes.remove(attempt);
                     boxes.add(newbox);
                     changed = true;
+                    if (verbose) System.out.println("success: box moves to " + newbox.toString());
+                    if (storages.contains(newbox)) {
+                        storages.remove(newbox);
+                        boxes.remove(newbox);
+                        storageChanged = true;
+                        walls.add(newbox);
+                    }
                 }
-                State cur = new State(walls,new HashSet<>(boxes),storages,attempt,move + s, rows, cols,verbose);
-                neighbors.add(cur);
+                if (verbose) System.out.println("player moves to " + attempt.toString());
+                State cur = new State(new HashSet<>(walls),new HashSet<>(boxes),new HashSet<>(storages),attempt,move + s, rows, cols,verbose);
+                if (!cur.isDeadLock()) {
+                    neighbors.add(cur);
+                    if (verbose) {
+                        System.out.println("("+player.getX()+","+player.getY()+") -> "+s + " | total: " + cur.getMove());
+                        cur.loadMap();
+                        cur.printMap();
+                    }
+                }
                 if (changed) {
                     boxes.remove(newbox);
                     boxes.add(attempt);
                     changed = false;
                 }
-            }
-        }
-    }
-
-    public void moveVerbose(int ax, int ay, int bx, int by, String s) {
-        System.out.println(player.toString() + " move " + s + " :");
-        if (!inbound(ax,ay) || !inbound(bx,by)) {
-            System.out.println(" not ok.");
-            return;
-        }
-        Point attempt = new Point(ax,ay);
-        Point newbox = new Point(bx,by);
-        boolean changed = false;
-        if (!walls.contains(attempt)) {
-            if (!boxes.contains(attempt) || !boxes.contains(newbox) && !walls.contains(newbox)) {
-                if (boxes.contains(attempt)) {
-                    boxes.remove(attempt);
+                if (storageChanged) {
+                    storages.add(newbox);
                     boxes.add(newbox);
-                    changed = true;
-                    System.out.println("success: box moves to " + newbox.toString());
-                }
-                System.out.println("player moves to " + attempt.toString());
-                State cur = new State(walls,new HashSet<>(boxes),storages,attempt,move + s, rows, cols,verbose);
-                neighbors.add(cur);
-                System.out.println("("+player.getX()+","+player.getY()+") -> "+s + " | total: " + cur.getMove());
-                cur.loadMap();
-                cur.printMap();
-                if (changed) {
-                    boxes.remove(newbox);
-                    boxes.add(attempt);
-                    changed = false;
+                    walls.remove(newbox);
+                    storageChanged = false;
                 }
             } else {
-                System.out.println(" not ok.");
+                if (verbose) System.out.println(" not ok.");
             }
         } else {
-            System.out.println(" not ok.");
+            if (verbose) System.out.println(" not ok.");
         }
     }
 
@@ -228,6 +212,26 @@ public class State {
         return playerToBoxes+boxesToStorages;
     }
 
+    public int singleMatch() {
+        int curr = Integer.MAX_VALUE;
+        int x = player.getX();
+        int y = player.getY();
+        for (Point e : boxes) {
+            int ex = e.getX();
+            int ey = e.getY();
+            int sum = (x - ex) * (x - ex) + (y - ey) * (y - ey);
+            if (sum < curr) curr = sum;
+        }
+        int cur2 = Integer.MAX_VALUE;
+        for (Point e : storages) {
+            int ex = e.getX();
+            int ey = e.getY();
+            int sum = (x - ex) * (x - ex) + (y - ey) * (y - ey);
+            if (sum < cur2) cur2 = sum;
+        }
+        return curr + cur2;
+    }
+
     public String getMove() {
         return move;
     }
@@ -275,7 +279,7 @@ public class State {
     public int hashCode() {
         int boxHashCode = 0;
         for (Point e : boxes) boxHashCode += e.hashCode();
-        return player.getX() * 139 + player.getY() + boxHashCode;
+        return player.getX() * 10000 +  143 * player.getY() + boxHashCode;
     }
 
     @Override
