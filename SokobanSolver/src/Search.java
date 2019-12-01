@@ -53,10 +53,13 @@ public class Search {
                 for (State e : curr.getNeighbors()) {
                     if (!visited.contains(e)) stack.push(e);
                     else {
-                        if (e.hashCode() == 1284) {
-                            for (State k : visited) {
-                                System.out.println(k.toString());
+                        if (verbose) {
+                            System.out.println("player: " + curr.getPlayer().toString());
+                            System.out.println("boxes: ");
+                            for (Point k : curr.getBoxes()) {
+                                System.out.print(k.toString() + " ");
                             }
+                            System.out.println();
                         }
                         if (verbose) System.out.println(e.toString() + " has been visited. Thus pass. ");
                     }
@@ -134,7 +137,7 @@ public class Search {
         while (!queue.isEmpty()) {
             State curr = queue.poll();
             visited.add(curr);
-            System.out.println(curr.toString() + " has been visited. ");
+            if (verbose)System.out.println(curr.toString() + " has been visited. ");
             System.out.println("--------------------Next Popped map: ---------------------");
             curr.loadMap();
             curr.printMap();
@@ -148,8 +151,15 @@ public class Search {
                 for (State e : curr.getNeighbors()) {
                     if (!visited.contains(e)) queue.add(e);
                     else {
-                        for (State a : visited) System.out.print(a.hashCode() + " ");
-                        System.out.println(e.toString() + " has been visited. Thus pass. ");
+                        if (verbose) {
+                            System.out.println("player: " + curr.getPlayer().toString());
+                            System.out.println("boxes: ");
+                            for (Point k : curr.getBoxes()) {
+                                System.out.print(k.toString() + " ");
+                            }
+                            System.out.println();
+                        }
+                        if (verbose) System.out.println(e.toString() + " has been visited. Thus pass. ");
                     }
                 }
             }

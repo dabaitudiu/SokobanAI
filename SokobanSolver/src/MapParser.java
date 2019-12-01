@@ -48,17 +48,17 @@ public class MapParser {
                         walls.add(j+1);
                         numWalls++;
                         break;
-                    case '@':
+                    case '$':
                         boxes.add(i+1);
                         boxes.add(j+1);
                         numBoxes++;
                         break;
-                    case '!':
+                    case '.':
                         storages.add(i+1);
                         storages.add(j+1);
                         numStorages++;
                         break;
-                    case '*':
+                    case '@':
                         pos.add(i+1);
                         pos.add(j+1);
                         break;

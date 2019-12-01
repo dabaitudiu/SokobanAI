@@ -13,9 +13,10 @@ public class State {
     private int cols;
     private char[][] map;
     private boolean verbose;
+    private HashSet<Point> deadlocks;
 
     public State(HashSet<Point> walls, HashSet<Point> boxes, HashSet<Point> storages,
-                 Point player, String move, int rows, int cols, boolean verbose) {
+                 Point player, String move, int rows, int cols, boolean verbose, HashSet<Point> deadlocks) {
         this.walls = walls;
         this.boxes = boxes;
         this.storages = storages;
@@ -25,6 +26,7 @@ public class State {
         this.rows = rows;
         this.cols = cols;
         this.verbose = verbose;
+        this.deadlocks = new HashSet<>(deadlocks);
     }
 
     public State(State s) {
@@ -38,6 +40,7 @@ public class State {
         this.rows = s.rows;
         this.cols = s.cols;
         this.verbose = s.verbose;
+        this.deadlocks = s.deadlocks;
     }
 
     public List<State> getNeighbors() {
@@ -70,20 +73,21 @@ public class State {
         if (!walls.contains(attempt)) {
             if (!boxes.contains(attempt) || !boxes.contains(newbox) && !walls.contains(newbox)) {
                 if (boxes.contains(attempt)) {
+                    if (deadlocks.contains(newbox)) return;
                     boxes.remove(attempt);
                     boxes.add(newbox);
                     changed = true;
                     if (verbose) System.out.println("success: box moves to " + newbox.toString());
-                    if (storages.contains(newbox)) {
-                        storages.remove(newbox);
-                        boxes.remove(newbox);
-                        storageChanged = true;
-                        walls.add(newbox);
-                    }
+//                    if (storages.contains(newbox)) {
+//                        storages.remove(newbox);
+//                        boxes.remove(newbox);
+//                        storageChanged = true;
+//                        walls.add(newbox);
+//                    }
                 }
                 if (verbose) System.out.println("player moves to " + attempt.toString());
-                State cur = new State(new HashSet<>(walls),new HashSet<>(boxes),new HashSet<>(storages),attempt,move + s, rows, cols,verbose);
-                if (!cur.isDeadLock()) {
+                State cur = new State(new HashSet<>(walls),new HashSet<>(boxes),new HashSet<>(storages),attempt,move + s, rows, cols,verbose, deadlocks);
+                if (true || changed) {
                     neighbors.add(cur);
                     if (verbose) {
                         System.out.println("("+player.getX()+","+player.getY()+") -> "+s + " | total: " + cur.getMove());
@@ -97,9 +101,9 @@ public class State {
                     changed = false;
                 }
                 if (storageChanged) {
-                    storages.add(newbox);
-                    boxes.add(newbox);
-                    walls.remove(newbox);
+//                    storages.add(newbox);
+//                    boxes.add(newbox);
+//                    walls.remove(newbox);
                     storageChanged = false;
                 }
             } else {
@@ -128,18 +132,38 @@ public class State {
      *                       # #      # #
      * @return
      */
-    public boolean isDeadLock() {
-        for (Point e : boxes) {
+    public boolean isDeadLock(HashSet<Point> gboxes) {
+        for (Point e : gboxes) {
             int x = e.getX();
             int y = e.getY();
 
             // case 1
             //   #  or  # @  or  #   or  @ #
             // # @        #      @ #     #
-            if (walls.contains(new Point(x-1,y)) && walls.contains(new Point(x,y-1))) return true;
-            if (walls.contains(new Point(x+1,y)) && walls.contains(new Point(x,y-1))) return true;
-            if (walls.contains(new Point(x-1,y)) && walls.contains(new Point(x,y+1))) return true;
-            if (walls.contains(new Point(x+1,y)) && walls.contains(new Point(x,y+1))) return true;
+//            if (walls.contains(new Point(x-1,y)) && walls.contains(new Point(x,y-1))) return true;
+//            if (walls.contains(new Point(x+1,y)) && walls.contains(new Point(x,y-1))) return true;
+//            if (walls.contains(new Point(x-1,y)) && walls.contains(new Point(x,y+1))) return true;
+//            if (walls.contains(new Point(x+1,y)) && walls.contains(new Point(x,y+1))) return true;
+
+//            if (walls.contains(new Point(x-1,y-1)) && walls.contains(new Point(x-1, y)) &&
+//                walls.contains(new Point(x-1,y+1)) && walls.contains(new Point(x, y-2)) &&
+//                walls.contains(new Point(x, y+2)) && (!storages.contains(new Point(x, y-1)) &&
+//                    !storages.contains(new Point(x, y+1)))) return true;
+//
+//            if (walls.contains(new Point(x+1,y-1)) && walls.contains(new Point(x+1, y)) &&
+//                    walls.contains(new Point(x+1,y+1)) && walls.contains(new Point(x, y-2)) &&
+//                    walls.contains(new Point(x, y+2)) && (!storages.contains(new Point(x, y-1)) &&
+//                    !storages.contains(new Point(x, y+1)))) return true;
+//
+//            if (walls.contains(new Point(x-1,y-1)) && walls.contains(new Point(x, y-1)) &&
+//                    walls.contains(new Point(x+1,y-1)) && walls.contains(new Point(x-2, y)) &&
+//                    walls.contains(new Point(x+2, y)) && (!storages.contains(new Point(x-1, y)) &&
+//                    !storages.contains(new Point(x+1, y)))) return true;
+//
+//            if (walls.contains(new Point(x-1,y+1)) && walls.contains(new Point(x, y+1)) &&
+//                    walls.contains(new Point(x+1,y+1)) && walls.contains(new Point(x-2, y)) &&
+//                    walls.contains(new Point(x+2, y)) && (!storages.contains(new Point(x-1, y)) &&
+//                    !storages.contains(new Point(x+1, y)))) return true;
 
             // case 2
             // ## or #@  or  @#  or  @@
@@ -268,6 +292,11 @@ public class State {
         }
     }
 
+    public HashSet<Point> getBoxes() {
+        return boxes;
+    }
+
+
     @Override
     public String toString() {
         String s = "Current status: player at (" + player.getX() + "," + player.getY() + ") with path "+ move
@@ -278,15 +307,21 @@ public class State {
     @Override
     public int hashCode() {
         int boxHashCode = 0;
-        for (Point e : boxes) boxHashCode += e.hashCode();
-        return player.getX() * 10000 +  143 * player.getY() + boxHashCode;
+        for (Point e : boxes) {
+            boxHashCode += e.hashCode();
+            boxHashCode *= 37;
+        }
+        return player.getX() * 73 +  player.getY() + boxHashCode;
     }
 
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof State) {
             State s = (State) obj;
-            return s.hashCode() == this.hashCode();
+            HashSet<Point> boxes1 = boxes;
+            HashSet<Point> boxes2 = s.getBoxes();
+            Point player2 = s.getPlayer();
+            return boxes1.equals(boxes2) && player.equals(player2);
         } else return false;
     }
 
