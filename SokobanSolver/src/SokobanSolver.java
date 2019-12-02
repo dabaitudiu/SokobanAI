@@ -5,18 +5,19 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 public class SokobanSolver {
+
     public static void main(String[] args) throws FileNotFoundException {
 //        parse();
         search();
     }
 
     static void parse() throws FileNotFoundException {
-        MapParser mps = new MapParser("inputs/map_t8.txt");
+        MapParser mps = new MapParser("inputs/input01.txt");
         mps.parse();
     }
 
     static void search() throws FileNotFoundException{
-        Sokoban sokoban = new Sokoban("inputs/t8.txt");
+        Sokoban sokoban = new Sokoban("inputs/t10.txt");
         DeadLockDetector detector = new DeadLockDetector(sokoban);
         HashSet<Point> hst = detector.getDeadlock();
         System.out.println("deadlocks: " + detector.toString());
@@ -29,10 +30,10 @@ public class SokobanSolver {
         Search search = new Search(false);
 
         // bfs
-        search.bfs(new State(root));
+//        search.bfs(new State(root));
 
         // dfs
-//        search.dfs(new State(root));
+        search.dfs(new State(root));
 
 
         // ucs

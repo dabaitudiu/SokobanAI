@@ -69,7 +69,7 @@ public class State {
         Point attempt = new Point(ax,ay);
         Point newbox = new Point(bx,by);
         boolean changed = false;
-        boolean storageChanged = false;
+
         if (!walls.contains(attempt)) {
             if (!boxes.contains(attempt) || !boxes.contains(newbox) && !walls.contains(newbox)) {
                 if (boxes.contains(attempt)) {
@@ -78,33 +78,19 @@ public class State {
                     boxes.add(newbox);
                     changed = true;
                     if (verbose) System.out.println("success: box moves to " + newbox.toString());
-//                    if (storages.contains(newbox)) {
-//                        storages.remove(newbox);
-//                        boxes.remove(newbox);
-//                        storageChanged = true;
-//                        walls.add(newbox);
-//                    }
                 }
                 if (verbose) System.out.println("player moves to " + attempt.toString());
-                State cur = new State(new HashSet<>(walls),new HashSet<>(boxes),new HashSet<>(storages),attempt,move + s, rows, cols,verbose, deadlocks);
-                if (true || changed) {
-                    neighbors.add(cur);
-                    if (verbose) {
-                        System.out.println("("+player.getX()+","+player.getY()+") -> "+s + " | total: " + cur.getMove());
-                        cur.loadMap();
-                        cur.printMap();
-                    }
+                State cur = new State(walls,new HashSet<>(boxes),new HashSet<>(storages),attempt,move + s, rows, cols,verbose, deadlocks);
+                neighbors.add(cur);
+                if (verbose) {
+                    System.out.println("("+player.getX()+","+player.getY()+") -> " +s + " | total: " + cur.getMove());
+                    cur.loadMap();
+                    cur.printMap();
                 }
                 if (changed) {
                     boxes.remove(newbox);
                     boxes.add(attempt);
                     changed = false;
-                }
-                if (storageChanged) {
-//                    storages.add(newbox);
-//                    boxes.add(newbox);
-//                    walls.remove(newbox);
-                    storageChanged = false;
                 }
             } else {
                 if (verbose) System.out.println(" not ok.");
@@ -112,73 +98,6 @@ public class State {
         } else {
             if (verbose) System.out.println(" not ok.");
         }
-    }
-
-    /**
-     * - case 1 :
-     *   #  or  # @  or  #   or  @ #
-     * # @        #      @ #     #
-     *
-     * - case 2:
-     * ## or #@  or  @#  or  @@
-     * @@    #@      @#      ##
-     *
-     *
-     * - case 3:
-     * #####  or  #?@?#  or  # #  or  # #
-     * #?@?#      #####      # ?      ? #
-     *                       # @      @ #
-     *                       # ?      ? #
-     *                       # #      # #
-     * @return
-     */
-    public boolean isDeadLock(HashSet<Point> gboxes) {
-        for (Point e : gboxes) {
-            int x = e.getX();
-            int y = e.getY();
-
-            // case 1
-            //   #  or  # @  or  #   or  @ #
-            // # @        #      @ #     #
-//            if (walls.contains(new Point(x-1,y)) && walls.contains(new Point(x,y-1))) return true;
-//            if (walls.contains(new Point(x+1,y)) && walls.contains(new Point(x,y-1))) return true;
-//            if (walls.contains(new Point(x-1,y)) && walls.contains(new Point(x,y+1))) return true;
-//            if (walls.contains(new Point(x+1,y)) && walls.contains(new Point(x,y+1))) return true;
-
-//            if (walls.contains(new Point(x-1,y-1)) && walls.contains(new Point(x-1, y)) &&
-//                walls.contains(new Point(x-1,y+1)) && walls.contains(new Point(x, y-2)) &&
-//                walls.contains(new Point(x, y+2)) && (!storages.contains(new Point(x, y-1)) &&
-//                    !storages.contains(new Point(x, y+1)))) return true;
-//
-//            if (walls.contains(new Point(x+1,y-1)) && walls.contains(new Point(x+1, y)) &&
-//                    walls.contains(new Point(x+1,y+1)) && walls.contains(new Point(x, y-2)) &&
-//                    walls.contains(new Point(x, y+2)) && (!storages.contains(new Point(x, y-1)) &&
-//                    !storages.contains(new Point(x, y+1)))) return true;
-//
-//            if (walls.contains(new Point(x-1,y-1)) && walls.contains(new Point(x, y-1)) &&
-//                    walls.contains(new Point(x+1,y-1)) && walls.contains(new Point(x-2, y)) &&
-//                    walls.contains(new Point(x+2, y)) && (!storages.contains(new Point(x-1, y)) &&
-//                    !storages.contains(new Point(x+1, y)))) return true;
-//
-//            if (walls.contains(new Point(x-1,y+1)) && walls.contains(new Point(x, y+1)) &&
-//                    walls.contains(new Point(x+1,y+1)) && walls.contains(new Point(x-2, y)) &&
-//                    walls.contains(new Point(x+2, y)) && (!storages.contains(new Point(x-1, y)) &&
-//                    !storages.contains(new Point(x+1, y)))) return true;
-
-            // case 2
-            // ## or #@  or  @#  or  @@
-            // @@    #@      @#      ##
-//            if (walls.contains(new Point(x-1,y)) && walls.contains(new Point(x-1,y-1)) &&
-//                boxes.contains(new Point(x,y-1))) return true;
-//            if (walls.contains(new Point(x,y-1)) && walls.contains(new Point(x+1,y-1)) &&
-//                    boxes.contains(new Point(x+1,y))) return true;
-//            if (walls.contains(new Point(x,y+1)) && walls.contains(new Point(x+1,y+1)) &&
-//                    boxes.contains(new Point(x+1,y))) return true;
-//            if (walls.contains(new Point(x+1,y)) && walls.contains(new Point(x+1,y+1)) &&
-//                    boxes.contains(new Point(x,y+1))) return true;
-        }
-        return false;
-
     }
 
     public boolean reachedGoal() {
