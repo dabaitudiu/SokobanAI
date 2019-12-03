@@ -4,8 +4,6 @@ import java.util.*;
 public class Search {
     private boolean verbose;
     private String outputFile;
-    private List<Graph> sequence;
-    private String ways;
 
     public Search(boolean verbose, String outputFile) {
         this.verbose = verbose;
@@ -18,6 +16,7 @@ public class Search {
         HashSet<State> visited = new HashSet<>();
         queue.add(state);
         while (!queue.isEmpty()) {
+//            System.out.println(queue.size());
             State curr = queue.poll();
             visited.add(curr);
             if (curr.reachedGoal()) {
@@ -27,14 +26,10 @@ public class Search {
                 List<Graph> sequence = curr.getSequence();
                 String ways = curr.getMove();
                 try {
-                    this.sequence = sequence;
-                    this.ways = ways;
                     PrintWriter writer = new PrintWriter(outputFile, "UTF-8");
                     System.out.println("sequence length: " + sequence.size());
                     System.out.println("ways length: " + ways.length());
                     for (int i = 0; i < sequence.size(); i++) {
-//                        System.out.println(ways.charAt(i));
-//                        sequence.get(i).printCharGraph();
                         sequence.get(i).printGraphToFile(writer,ways.charAt(i));
                     }
                     writer.close();
@@ -42,7 +37,7 @@ public class Search {
                 } catch (Exception o) {
                     o.printStackTrace();
                 }
-                break;
+                return true;
             } else {
                 for (State e : curr.getNeighbors()) {
                     if (!visited.contains(e)) queue.add(e);
@@ -52,22 +47,7 @@ public class Search {
         return false;
     }
 
-    public void printModel() {
-        try {
-            PrintWriter writer = new PrintWriter(outputFile, "UTF-8");
-            System.out.println("sequence length: " + sequence.size());
-            System.out.println("ways length: " + ways.length());
-            for (int i = 0; i < sequence.size(); i++) {
-
-                sequence.get(i).printGraphToFile(writer,ways.charAt(i));
-            }
-            writer.close();
-        } catch (Exception o) {
-            o.printStackTrace();
-        }
-    }
-
-    public void dfs(State state) {
+    boolean dfs(State state) {
         long startTime = System.currentTimeMillis();
         Stack<State> stack = new Stack<>();
         HashSet<State> visited = new HashSet<>();
@@ -82,13 +62,28 @@ public class Search {
                 System.out.println("**************** Solution Found ! ******************");
                 System.out.println(curr.getMove());
                 System.out.println("dfs: " + (System.currentTimeMillis() - startTime) + " ms");
-                break;
+                List<Graph> sequence = curr.getSequence();
+                String ways = curr.getMove();
+                try {
+                    PrintWriter writer = new PrintWriter(outputFile, "UTF-8");
+                    System.out.println("sequence length: " + sequence.size());
+                    System.out.println("ways length: " + ways.length());
+                    for (int i = 0; i < sequence.size(); i++) {
+                        sequence.get(i).printGraphToFile(writer,ways.charAt(i));
+                    }
+                    writer.close();
+                } catch (Exception o) {
+                    o.printStackTrace();
+                }
+                return true;
+
             } else {
                 for (State e : curr.getNeighbors()) {
                     if (!visited.contains(e)) stack.push(e);
                 }
             }
         }
+        return false;
     }
 
     public void ucs(State state) {

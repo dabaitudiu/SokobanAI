@@ -30,12 +30,20 @@ public class MapGenerator {
 
     public void generate(int maxTries) {
         int maxRecord = maxTries;
+        for (int i = 0; i < rows; i++) {
+            walls.add(new Point(i + 1, 1));
+            walls.add(new Point(i + 1, cols));
+        }
+        for (int j = 0; j < cols; j++) {
+            walls.add(new Point(1, j + 1));
+            walls.add(new Point(rows, j + 1));
+        }
         while (maxTries-- > 0) {
             for (int i = 0; i < numWalls; i++) {
-                walls.add(new Point(random.nextInt(rows)+1, random.nextInt(cols)+1));
+                walls.add(new Point(random.nextInt(rows-2)+2, random.nextInt(cols-2)+2));
             }
             for (int j = 0; j < numBoxes;) {
-                Point p = new Point(random.nextInt(rows)+1, random.nextInt(cols)+1);
+                Point p = new Point(random.nextInt(rows-2)+2, random.nextInt(cols-2)+2);
                 if (walls.contains(p)) continue;
                 else {
                     boxes.add(p);
@@ -43,7 +51,7 @@ public class MapGenerator {
                 }
             }
             for (int k = 0; k <numBoxes;) {
-                Point p = new Point(random.nextInt(rows)+1, random.nextInt(cols)+1);
+                Point p = new Point(random.nextInt(rows-2)+2, random.nextInt(cols-2)+2);
                 if (walls.contains(p) ||  boxes.contains(p)) continue;
                 else {
                     storages.add(p);
@@ -52,7 +60,7 @@ public class MapGenerator {
             }
 
             for (int i = 0; i < maxRecord; i++) {
-                player = new Point(random.nextInt(rows)+1, random.nextInt(cols)+1);
+                player = new Point(random.nextInt(rows-2)+2, random.nextInt(cols-2)+2);
                 if (!walls.contains(player) && !boxes.contains(player) && !storages.contains(player)) break;
             }
 
@@ -81,7 +89,9 @@ public class MapGenerator {
         Search search = new Search(false, outputFile);
 
         // bfs
-        boolean res = search.bfs(new State(root));
+        System.out.println("Do a search");
+        boolean res = search.dfs(root);
+        System.out.println("STuck here.B");
         if (res) System.out.println("This Map works: (" + rows + "×"+cols+") " + "walls: " + numWalls + " boxes: " + boxes);
         if (res) sokoban.printMap();
         return res;

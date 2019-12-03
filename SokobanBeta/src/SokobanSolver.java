@@ -7,9 +7,12 @@ public class SokobanSolver {
     public static void main(String[] args) throws FileNotFoundException {
 //        parse();
 //        search();
-        String outputFile = "g04.txt";
-        MapGenerator generator = new MapGenerator(10,10,20,1,System.currentTimeMillis(),outputFile);
-        generator.generate(30);
+        int n = 1;
+        for (int i = 0; i < n; i++) {
+            String outputFile = String.format("generated/input_%d.txt",i);
+            MapGenerator generator = new MapGenerator(10,10,30,3,System.currentTimeMillis(),outputFile);
+            generator.generate(1);
+        }
     }
 
     static void parse() throws FileNotFoundException {
@@ -32,10 +35,10 @@ public class SokobanSolver {
         Search search = new Search(false, "entry_01.txt");
 
         // bfs
-        search.bfs(new State(root));
+//        search.bfs(new State(root));
 
         // dfs
-//        search.dfs(new State(root));
+        search.dfs(new State(root));
 
 
         // ucs
