@@ -7,11 +7,14 @@ public class SokobanSolver {
     public static void main(String[] args) throws FileNotFoundException {
 //        parse();
 //        search();
-        int n = 1;
-        for (int i = 0; i < n; i++) {
+        int n = 10;
+        int start = 65;
+        int index = start;
+        for (int i = start; i < n+start; i++) {
+            System.out.println("--------------  Forming model " + (index++) + "  --------------");
             String outputFile = String.format("generated/input_%d.txt",i);
-            MapGenerator generator = new MapGenerator(10,10,30,3,System.currentTimeMillis(),outputFile);
-            generator.generate(1);
+            MapGenerator generator = new MapGenerator(10,10,13,2,System.currentTimeMillis(),outputFile);
+            generator.generate(20);
         }
     }
 

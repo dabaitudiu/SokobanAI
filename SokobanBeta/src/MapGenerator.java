@@ -30,15 +30,15 @@ public class MapGenerator {
 
     public void generate(int maxTries) {
         int maxRecord = maxTries;
-        for (int i = 0; i < rows; i++) {
-            walls.add(new Point(i + 1, 1));
-            walls.add(new Point(i + 1, cols));
-        }
-        for (int j = 0; j < cols; j++) {
-            walls.add(new Point(1, j + 1));
-            walls.add(new Point(rows, j + 1));
-        }
         while (maxTries-- > 0) {
+            for (int i = 0; i < rows; i++) {
+                walls.add(new Point(i + 1, 1));
+                walls.add(new Point(i + 1, cols));
+            }
+            for (int j = 0; j < cols; j++) {
+                walls.add(new Point(1, j + 1));
+                walls.add(new Point(rows, j + 1));
+            }
             for (int i = 0; i < numWalls; i++) {
                 walls.add(new Point(random.nextInt(rows-2)+2, random.nextInt(cols-2)+2));
             }
@@ -89,9 +89,7 @@ public class MapGenerator {
         Search search = new Search(false, outputFile);
 
         // bfs
-        System.out.println("Do a search");
         boolean res = search.dfs(root);
-        System.out.println("STuck here.B");
         if (res) System.out.println("This Map works: (" + rows + "×"+cols+") " + "walls: " + numWalls + " boxes: " + boxes);
         if (res) sokoban.printMap();
         return res;
