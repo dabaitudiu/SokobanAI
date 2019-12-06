@@ -8,12 +8,12 @@ public class SokobanSolver {
 //        parse();
 //        search();
         int n = 5;
-        int start = 6;
+        int start = 1;
         int index = start;
         for (int i = start; i < n+start; i++) {
             System.out.println("--------------  Forming model " + (index++) + "  --------------");
-            String outputFile = String.format("formal_inputs/input_10_10_2_%d.txt",i);
-            MapGenerator generator = new MapGenerator(10,10,10,3,System.currentTimeMillis(),outputFile);
+            String outputFile = String.format("formal_inputs/input_9_9_3_%d.txt",i);
+            MapGenerator generator = new MapGenerator(9,9,10,3,System.currentTimeMillis(),outputFile);
             generator.generate(20);
         }
     }

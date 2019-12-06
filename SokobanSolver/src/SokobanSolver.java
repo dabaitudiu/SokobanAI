@@ -15,26 +15,28 @@ public class SokobanSolver {
     static final String ASTAR_A = "A*_EUCLIDEAN";
     static final String ASTAR_B = "A*_MANHATTEN";
 
+    static final String filename = "formal_inputs/input_9_9_2_1.txt";
+
     public static void main(String[] args) throws FileNotFoundException {
+        // test all algorithms
+        compiledSearch();
 
-
-        for (int i = 1; i <= 3; i++) {
-            String filename = String.format("formal_inputs/input_10_10_2_%d.txt",i);
-            System.out.println("Batch " + i + " : ");
-            search(BFS, filename);
-            search(DFS, filename);
-            search(IDS, filename);
-            search(UCS, filename);
-            search(GREEDY_A, filename);
-            search(GREEDY_B, filename);
-            search(ASTAR_A, filename);
-            search(ASTAR_B, filename);
-            System.out.println();
-        }
-
+        // parse a intuitive map to a formal input
+        // parseMap("maps/input15_twobox1.txt");
     }
 
-    static void search(String method, String filename) throws FileNotFoundException{
+    static void compiledSearch() throws FileNotFoundException{
+        search(BFS);
+        search(DFS);
+        search(IDS);
+        search(UCS);
+        search(GREEDY_A);
+        search(GREEDY_B);
+        search(ASTAR_A);
+        search(ASTAR_B);
+    }
+
+    static void search(String method) throws FileNotFoundException{
         Sokoban sokoban = new Sokoban(filename);
 //        sokoban.printMap();
         DeadLockDetector detector = new DeadLockDetector(sokoban);
@@ -65,8 +67,8 @@ public class SokobanSolver {
         if (method.equals(ASTAR_B))  search.astar(new State(root),"manhatten");
     }
 
-    static void parseMap() throws FileNotFoundException {
-        MapParser mps = new MapParser("inputs/input01.txt");
+    static void parseMap(String filename) throws FileNotFoundException {
+        MapParser mps = new MapParser(filename);
         mps.parse();
     }
 }

@@ -31,7 +31,7 @@ public class Search {
 //                System.out.println("**************** Solution Found ! ******************");
 //                System.out.println(curr.getMove());
 //                System.out.println("bfs: " + (System.currentTimeMillis() - startTime) + " ms");
-                System.out.print((System.currentTimeMillis() - startTime) + " ");
+                System.out.print("BFS: " + (System.currentTimeMillis() - startTime) + " ");
                 break;
             } else {
                 for (State e : curr.getNeighbors()) {
@@ -61,7 +61,7 @@ public class Search {
 //                System.out.println("**************** Solution Found ! ******************");
 //                System.out.println(curr.getMove());
 //                System.out.println("dfs: " + (System.currentTimeMillis() - startTime) + " ms");
-                System.out.print((System.currentTimeMillis() - startTime) + " ");
+                System.out.print(" DFS: " + (System.currentTimeMillis() - startTime) + " ");
                 break;
             } else {
                 for (State e : curr.getNeighbors()) {
@@ -93,7 +93,7 @@ public class Search {
 //                    System.out.println("**************** Solution Found ! ******************");
 //                    System.out.println(curr.getMove());
 //                    System.out.println("ids: " + (System.currentTimeMillis() - startTime) + " ms");
-                    System.out.print((System.currentTimeMillis() - startTime) + " ");
+                    System.out.print(" IDS: " + (System.currentTimeMillis() - startTime) + " ");
                     return;
                 } else {
                     for (State e : curr.getNeighbors()) {
@@ -129,7 +129,7 @@ public class Search {
 //                System.out.println("**************** Solution Found ! ******************");
 //                System.out.println(curr.getMove());
 //                System.out.println("ucs: " + (System.currentTimeMillis() - startTime) + " ms");
-                System.out.print((System.currentTimeMillis() - startTime) + " ");
+                System.out.print(" UCS: " + (System.currentTimeMillis() - startTime) + " ");
                 break;
             } else {
                 for (State e : curr.getNeighbors()) {
@@ -166,7 +166,7 @@ public class Search {
 //                System.out.println("**************** Solution Found ! ******************");
 //                System.out.println(curr.getMove());
 //                System.out.println("greedy(" + heuristic + "): "+ (System.currentTimeMillis() - startTime) + " ms");
-                System.out.print((System.currentTimeMillis() - startTime) + " ");
+                System.out.print(" Gr: " + (System.currentTimeMillis() - startTime) + " ");
                 break;
             } else {
                 for (State e : curr.getNeighbors()) {
@@ -205,7 +205,7 @@ public class Search {
 //                System.out.println("**************** Solution Found ! ******************");
 //                System.out.println(curr.getMove());
 //                System.out.println("A* (" + heuristic + "): "+ (System.currentTimeMillis() - startTime) + " ms");
-                System.out.print((System.currentTimeMillis() - startTime) + " ");
+                System.out.print(" A*: " + (System.currentTimeMillis() - startTime) + " ");
                 break;
             } else {
                 for (State e : curr.getNeighbors()) {
