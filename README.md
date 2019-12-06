@@ -80,7 +80,7 @@ Sokoban sokoban = new Sokoban(filename);
 ```
 
 ### Output:
-- A sample output should be like this (measured in ms):
+- A sample output for comparing speed be like this (measured in ms):
 ```
 
 BFS: 417  DFS: 8  IDS: 174  UCS: 248  Gr: 47  Gr: 93  A*: 149  A*: 65 
@@ -88,6 +88,30 @@ Process finished with exit code 0
 
 ```
 
-You can change the search class so that they print more information.
+You can change the search class so that they print paths:
+```
+**************** Solution Found ! ******************
+ddrruuuudlll
+bfs: 122 ms
+**************** Solution Found ! ******************
+rrlrdrdlrdllllllururrrrulllllurrrrlllldrrrrrdrdllrrdllluuurruuldll
+ids: 97 ms
+**************** Solution Found ! ******************
+drdruuuuldll
+ucs: 68 ms
+**************** Solution Found ! ******************
+rddruuuuldll
+greedy(euclidean): 2 ms
+**************** Solution Found ! ******************
+drdruuuudlll
+greedy(manhatten): 7 ms
+**************** Solution Found ! ******************
+drdruuuuldll
+A* (euclidean): 8 ms
+**************** Solution Found ! ******************
+ddrruuuuldll
+A* (manhatten): 8 ms
+
+```
 
 
