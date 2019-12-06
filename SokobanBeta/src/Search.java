@@ -64,17 +64,17 @@ public class Search {
                 System.out.println("dfs: " + (System.currentTimeMillis() - startTime) + " ms");
                 List<Graph> sequence = curr.getSequence();
                 String ways = curr.getMove();
-                try {
-                    PrintWriter writer = new PrintWriter(outputFile, "UTF-8");
-                    System.out.println("sequence length: " + sequence.size());
-                    System.out.println("ways length: " + ways.length());
-                    for (int i = 0; i < sequence.size(); i++) {
-                        sequence.get(i).printGraphToFile(writer,ways.charAt(i));
-                    }
-                    writer.close();
-                } catch (Exception o) {
-                    o.printStackTrace();
-                }
+//                try {
+//                    PrintWriter writer = new PrintWriter(outputFile, "UTF-8");
+//                    System.out.println("sequence length: " + sequence.size());
+//                    System.out.println("ways length: " + ways.length());
+//                    for (int i = 0; i < sequence.size(); i++) {
+//                        sequence.get(i).printGraphToFile(writer,ways.charAt(i));
+//                    }
+//                    writer.close();
+//                } catch (Exception o) {
+//                    o.printStackTrace();
+//                }
                 return true;
 
             } else {
@@ -113,7 +113,7 @@ public class Search {
         }
     }
 
-    public void greedy(State state, String heuristic) {
+    public boolean greedy(State state, String heuristic) {
         long startTime = System.currentTimeMillis();
         Queue<State> queue = new PriorityQueue<>(new Comparator<State>() {
             @Override
@@ -133,13 +133,14 @@ public class Search {
                 System.out.println("**************** Solution Found ! ******************");
                 System.out.println(curr.getMove());
                 System.out.println("greedy(" + heuristic + "): "+ (System.currentTimeMillis() - startTime) + " ms");
-                break;
+                return true;
             } else {
                 for (State e : curr.getNeighbors()) {
                     if (!visited.contains(e)) queue.add(e);
                 }
             }
         }
+        return false;
     }
 
 

@@ -31,7 +31,7 @@ public  class Sokoban {
         // handle sizes
         width = Integer.parseInt(sizes[0]);
         height = Integer.parseInt(sizes[1]);
-        System.out.println("width : " + width + " height : " + height);
+//        System.out.println("width : " + width + " height : " + height);
 
         // handle objects
         load(nWalls, walls, "walls");
@@ -40,18 +40,18 @@ public  class Sokoban {
 
         // handle player
         player = new Point(Integer.parseInt(pos[0]), Integer.parseInt(pos[1]));
-        System.out.println("Player at: " + player.toString());
+//        System.out.println("Player at: " + player.toString());
 
     }
 
     private void load(String[] arr, HashSet<Point> hst, String name) {
         int num = Integer.parseInt(arr[0]);
-        System.out.print("totoal " + name + " : " + num + " -> ");
+//        System.out.print("total " + name + " : " + num + " -> ");
         for (int i = 0; i < num; i++) {
             hst.add(new Point(Integer.parseInt(arr[2 * i + 1]),Integer.parseInt(arr[2 * i + 2])));
         }
-        hst.forEach(e -> {System.out.print(e.toString() + " ");});
-        System.out.println();
+//        hst.forEach(e -> {System.out.print(e.toString() + " ");});
+//        System.out.println();
     }
 
     private void loadMap() {
@@ -65,12 +65,12 @@ public  class Sokoban {
             map[e.getX()-1][e.getY()-1] = '#';
         }
         for (Point e : boxes) {
-            map[e.getX()-1][e.getY()-1] = '@';
+            map[e.getX()-1][e.getY()-1] = '$';
         }
         for (Point e : storages) {
-            map[e.getX()-1][e.getY()-1] = '!';
+            map[e.getX()-1][e.getY()-1] = '.';
         }
-        map[player.getX()-1][player.getY()-1] = '*';
+        map[player.getX()-1][player.getY()-1] = '@';
     }
 
     public void printMap() {

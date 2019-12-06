@@ -1,4 +1,5 @@
 import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -66,7 +67,16 @@ public class MapGenerator {
 
             System.out.println("Map Generation finished. Now begin testing.");
             Sokoban skb = new Sokoban(rows,cols,walls,boxes,storages,player);
-            if (doSearch(skb,outputFile)) return;
+            if (doSearch(skb,outputFile)) {
+                try {
+                    PrintWriter pw = new PrintWriter(outputFile, "UTF-8");
+                    printMapInputToFile(pw);
+                    pw.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return;
+            }
             System.out.println("Model failed.");
             walls = new HashSet<>();
             boxes = new HashSet<>();
@@ -89,7 +99,7 @@ public class MapGenerator {
         Search search = new Search(false, outputFile);
 
         // bfs
-        boolean res = search.dfs(root);
+        boolean res = search.greedy(root,"manhatten");
         if (res) System.out.println("This Map works: (" + rows + "×"+cols+") " + "walls: " + numWalls + " boxes: " + boxes);
         if (res) sokoban.printMap();
         return res;
@@ -104,5 +114,25 @@ public class MapGenerator {
         // greedy
 //        search.greedy(new State(root),"euclidean");
 //        search.greedy(new State(root),"manhatten");
+    }
+
+    public void printMapInputToFile(PrintWriter printWriter) {
+        printWriter.println(rows+ " " + cols);
+        printWriter.print(walls.size() + " ");
+        for (Point e : walls) {
+            printWriter.print(e.getX() + " " + e.getY() + " ");
+        }
+        printWriter.println();
+        printWriter.print(boxes.size() + " ");
+        for (Point e : boxes) {
+            printWriter.print(e.getX() + " " + e.getY() + " ");
+        }
+        printWriter.println();
+        printWriter.print(storages.size() + " ");
+        for (Point e : storages) {
+            printWriter.print(e.getX() + " " + e.getY() + " ");
+        }
+        printWriter.println();
+        printWriter.print(player.getX() + " " + player.getY());
     }
 }

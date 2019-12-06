@@ -1,5 +1,6 @@
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.nio.MappedByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -23,6 +24,17 @@ public class MapParser {
             char[] cs = lines.get(i).toCharArray();
             for (int j = 0; j < col; j++) {
                 map[i][j] = cs[j];
+            }
+        }
+    }
+
+    public MapParser(int row, int col, char[][] input) {
+        this.row = row;
+        this.col = col;
+        map = new char[row][col];
+        for (int i = 0; i < row; i++) {
+            for (int j = 0; j < col; j++) {
+                this.map[i][j] = input[i][j];
             }
         }
     }

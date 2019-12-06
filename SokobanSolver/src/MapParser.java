@@ -9,6 +9,11 @@ public class MapParser {
     int row;
     int col;
 
+    /**
+     * The Map Parser function reads a characterized map, and maps into a formal input.
+     * @param filename
+     * @throws FileNotFoundException
+     */
     public MapParser(String filename) throws FileNotFoundException {
         Scanner s = new Scanner(new File(filename));
         List<String> lines = new ArrayList<>();
@@ -29,7 +34,6 @@ public class MapParser {
 
     void parse() {
 
-        // 1. width and height
         System.out.println(col + " " + row);
 
         int numWalls = 0;

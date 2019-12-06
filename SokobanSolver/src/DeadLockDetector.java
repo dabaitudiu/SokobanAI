@@ -35,9 +35,9 @@ public class DeadLockDetector {
                     if(cornorTest(current)){
                         try {
                             this.deadlocks.add(current);
-                            System.out.println(String.format("**Cornor Deadlock Found**( %d , %d)", current.getX(), current.getY()));
+//                            System.out.println(String.format("**Cornor Deadlock Found**( %d , %d)", current.getX(), current.getY()));
                             map[i - 1][j - 1] = '^';
-                            printMap();
+//                            printMap();
 //                            System.out.println("-----------------------------------------");
                         }
                         catch(NullPointerException e){
@@ -129,7 +129,7 @@ public class DeadLockDetector {
 
 
         if(this.walls.contains(getLeftNeighbor(current))){
-            System.out.println("Left wall...");
+//            System.out.println("Left wall...");
             int upbound = this.findNearestUpbound(current);
             int downbound = this.findNearestDownbound(current);
 
@@ -151,7 +151,7 @@ public class DeadLockDetector {
         }
 
         if(this.walls.contains(getRightNeighbor(current))){
-            System.out.println("Right wall...");
+//            System.out.println("Right wall...");
             int upbound = this.findNearestUpbound(current);
             int downbound = this.findNearestDownbound(current);
 
@@ -173,7 +173,7 @@ public class DeadLockDetector {
         }
 
         if(this.walls.contains(getUpNeighbor(current))){
-            System.out.println("Up wall...");
+//            System.out.println("Up wall...");
             int rightbound = this.findNearestRightbound(current);
             int leftbound = this.findNearestLeftbound(current);
 
@@ -196,7 +196,7 @@ public class DeadLockDetector {
         }
 
         if(this.walls.contains(getdownNeighbor(current))){
-            System.out.println("Down wall...");
+//            System.out.println("Down wall...");
             int rightbound = this.findNearestRightbound(current);
             int leftbound = this.findNearestLeftbound(current);
 

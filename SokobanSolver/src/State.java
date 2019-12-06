@@ -15,6 +15,12 @@ public class State {
     private boolean verbose;
     private HashSet<Point> deadlocks;
 
+    /**
+     * The State class is the most important class in this program, it generally describes:
+     * 1. the environment: map info
+     * 2. Past 'steps' to reach current sate
+     * 3. A set of deadlocks indicating non-available moves.
+     */
     public State(HashSet<Point> walls, HashSet<Point> boxes, HashSet<Point> storages,
                  Point player, String move, int rows, int cols, boolean verbose, HashSet<Point> deadlocks) {
         this.walls = walls;
@@ -155,26 +161,6 @@ public class State {
         return playerToBoxes+boxesToStorages;
     }
 
-    public int singleMatch() {
-        int curr = Integer.MAX_VALUE;
-        int x = player.getX();
-        int y = player.getY();
-        for (Point e : boxes) {
-            int ex = e.getX();
-            int ey = e.getY();
-            int sum = (x - ex) * (x - ex) + (y - ey) * (y - ey);
-            if (sum < curr) curr = sum;
-        }
-        int cur2 = Integer.MAX_VALUE;
-        for (Point e : storages) {
-            int ex = e.getX();
-            int ey = e.getY();
-            int sum = (x - ex) * (x - ex) + (y - ey) * (y - ey);
-            if (sum < cur2) cur2 = sum;
-        }
-        return curr + cur2;
-    }
-
     public String getMove() {
         return move;
     }
@@ -209,6 +195,10 @@ public class State {
             }
             System.out.println();
         }
+    }
+
+    public int getSize() {
+        return rows * cols;
     }
 
     public HashSet<Point> getBoxes() {
