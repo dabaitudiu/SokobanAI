@@ -15,7 +15,7 @@ public class SokobanSolver {
     static final String ASTAR_A = "A*_EUCLIDEAN";
     static final String ASTAR_B = "A*_MANHATTEN";
 
-    static final String filename = "formal_inputs/input_9_9_2_1.txt";
+    static final String filename = "formal_inputs/input_10_10_3_1.txt";
 
     public static void main(String[] args) throws FileNotFoundException {
         // test all algorithms
@@ -34,6 +34,7 @@ public class SokobanSolver {
         search(GREEDY_B);
         search(ASTAR_A);
         search(ASTAR_B);
+//        search(GREEDY_A);
     }
 
     static void search(String method) throws FileNotFoundException{

@@ -45,7 +45,7 @@ public  class Sokoban {
     }
 
     private void load(String[] arr, HashSet<Point> hst, String name) {
-        int num = Integer.parseInt(arr[0]);
+        int num = Integer.parseInt(arr[0]) - 1;
 //        System.out.print("total " + name + " : " + num + " -> ");
         for (int i = 0; i < num; i++) {
             hst.add(new Point(Integer.parseInt(arr[2 * i + 1]),Integer.parseInt(arr[2 * i + 2])));
