@@ -1,5 +1,7 @@
 ## UC Irvine CS271 Sokoban AI
 
+For better understanding and detailed explanations, our report is [Here](https://github.com/dabaitudiu/sokoban/blob/master/SokobanAI.pdf)
+
 ### Problem statement & Input format:
 ```
 a. input is 5 lines defining the board :
@@ -14,7 +16,36 @@ b. output is a single line, beginning with nMoves followed by a sequence of lett
 ```
 
 ### Usage
-I haven't tried to compile all files using terminal, but it should work. For your convenience, you may import it as a Intellij project. Head forward to the SokobanSolver directories and run the SokobanSolver class.
+For your convenience, you may import it as a Intellij project. Head forward to the SokobanSolver directories and run the SokobanSolver class.
+```
+1. For a sample test: 
+   cd SokobanSolver
+   cd src
+   java SokobanSolver.java
+
+2. If you want to change input:
+   a. Go to benchmarks and paste your formal input
+   b. In the file SokobanSolver.java, change the following:
+
+   static final String filename = "../formal_inputs/12_1_a.txt";
+
+3. If you **FAIL** to compile / run:
+   Solution a: javac *.java, then run
+       
+
+   Solution b: If above still not working, run these commands consequentially:
+   	javac Point.java
+	javac Sokoban.java
+	javac DeadLockDetector.java
+	javac MapParser.java
+	javac State.java
+	javac Search.java
+	javac SokobanSolver.java
+	java SokobanSolver
+
+    If still not working, please inform zhenhal3@uci.edu.
+```
+
 
 ### Explanations
 
